@@ -22,14 +22,14 @@ class Article
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?pays $pays = null;
+    private ?Pays $pays = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?races $races = null;
+    private ?Races $races = null;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    private ?commentaire $commentaire = null;
+    private ?Commentaire $commentaire = null;
 
     public function getId(): ?int
     {
