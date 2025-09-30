@@ -93,7 +93,8 @@ final class ArticleController extends AbstractController
     public function show(Article $article, ArticleRepository $articleRepo,CommentaireRepository $commmentaireRepo, int $id): Response
     {
         $article = $articleRepo->findOneBy(['id' => $id]);
-        $commentaires = $commmentaireRepo->findAll();
+        //selection de toutes commentaires
+        $commentaires = $commmentaireRepo->findBy(['article' => $article], ['createdAt' => 'DESC']);
         return $this->render('article/show.html.twig', [
             'article' => $article,
             'commentaires' => $commentaires,

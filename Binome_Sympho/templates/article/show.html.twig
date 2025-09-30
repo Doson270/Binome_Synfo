@@ -1,15 +1,27 @@
-<article>
-    <h1>{{ article.name }}</h1>
-    <span>{{ article.pays.name }}</span>
-    <span>{{ article.races.names }}</span><br>
-    <span>{{ article.races.espece }}</span><br>
-    <img src="{{ asset('assets/upload/article/' ~ article.image) }}" alt="{{ article.name }}">
-    <p>{{ article.description }}</p>
+        <article>
+            <h1>{{ article.name }}</h1>
+            <span>{{ article.pays.name }}</span>
+            <span>{{ article.races.names }}</span><br>
+            <span>{{ article.races.espece }}</span><br>
+            <img src="{{ asset('assets/upload/article/' ~ article.image) }}" alt="{{ article.name }}">
+            <p>{{ article.description }}</p>
 
-   
-    {% for commentaire in commentaires %}
-        
-    {% endfor %}
+         <h2>Commentaires</h2>
+            {% for commentaire in commentaires %}
+                <div class="commentaire">
+                    <strong>{{ commentaire.auteur }}</strong> le {{ commentaire.createdAt|date('d/m/Y H:i') }}<br>
+                    <p>{{ commentaire.contenu }}</p>
+                </div>
+            {% else %}
+                <p>Aucun commentaire pour le moment.</p>
+            {% endfor %}
 
-</article>
+            <h3>Ajouter un commentaire</h3>
+            {{ form_start(form) }}
+                {{ form_row(form.auteur) }}
+                {{ form_row(form.contenu) }}
+                <button type="submit">Envoyer</button>
+            {{ form_end(form) }}
+
+        </article>
    

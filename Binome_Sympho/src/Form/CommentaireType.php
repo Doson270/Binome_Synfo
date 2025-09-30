@@ -2,9 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Article;
 use App\Entity\Commentaire;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,17 +13,12 @@ class CommentaireType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('content')
-            ->add('auteur')
-            ->add('article', EntityType::class, [
-                'class' => Article::class,
-                'choice_label' => 'id',
-            ])
+            ->add('auteur')   
+            ->add('content')   
             ->add('submit', SubmitType::class, [
-            'label' => 'Ajouter',
-            'attr' => ['class' => 'btn btn-primary'],
-        ])
-        ;
+                'label' => 'Ajouter',
+                'attr' => ['class' => 'btn btn-primary'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
