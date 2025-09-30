@@ -25,6 +25,9 @@ class Commentaire
     #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'commentaire')]
     private Collection $articles;
 
+    #[ORM\Column(length: 255)]
+    private ?string $auteur = null;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -73,6 +76,18 @@ class Commentaire
                 $article->setCommentaire(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getAuteur(): ?string
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(string $auteur): static
+    {
+        $this->auteur = $auteur;
 
         return $this;
     }

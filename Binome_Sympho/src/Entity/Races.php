@@ -24,6 +24,9 @@ class Races
     #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'races')]
     private Collection $articles;
 
+    #[ORM\Column(length: 255)]
+    private ?string $espece = null;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
@@ -72,6 +75,18 @@ class Races
                 $article->setRaces(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getEspece(): ?string
+    {
+        return $this->espece;
+    }
+
+    public function setEspece(string $espece): static
+    {
+        $this->espece = $espece;
 
         return $this;
     }

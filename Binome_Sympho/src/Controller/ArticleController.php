@@ -30,6 +30,17 @@ final class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $file = $form->get('image')->getData();
+                if ($file){
+
+                    //ici je change le nom de l ilage
+                    $newFileName = time().'_'. $file -> getClientOriginalName();
+                    //ici je gere la location de l image
+                    $file->move($this->getParameter('article_dir'), $newFileName);
+                    $article->setImage($newFileName);
+                }
+                
             $entityManager->persist($article);
             $entityManager->flush();
 
@@ -43,7 +54,7 @@ final class ArticleController extends AbstractController
     }
 
 
-        
+        // ici j affiche u nseul article
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
     public function show(Article $article, ArticleRepository $articleRepo, int $id): Response
     {
@@ -82,4 +93,5 @@ final class ArticleController extends AbstractController
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }
