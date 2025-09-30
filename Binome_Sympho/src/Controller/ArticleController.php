@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,12 +90,13 @@ final class ArticleController extends AbstractController
 
             // ici j affiche un seul article
     #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article, ArticleRepository $articleRepo, int $id): Response
+    public function show(Article $article, ArticleRepository $articleRepo,CommentaireRepository $commmentaireRepo, int $id): Response
     {
         $article = $articleRepo->findOneBy(['id' => $id]);
-        
+        $commentaires = $commmentaireRepo->findAll();
         return $this->render('article/show.html.twig', [
             'article' => $article,
+            'commentaires' => $commentaires,
         ]);
     }
 }
