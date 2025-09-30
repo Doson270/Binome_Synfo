@@ -1,17 +1,13 @@
 <article>
     <h1>{{ article.name }}</h1>
     <span>{{ article.pays.name }}</span>
-    <span>{{ article.races.names }}</span>
-    <span>{{ article.races.espece }}</span>
-    <img src="{{ article.image }}" alt="{{ article.name }}">
+    <span>{{ article.races.names }}</span><br>
+    <span>{{ article.races.espece }}</span><br>
+    <img src="{{ asset('assets/upload/article/' ~ article.image) }}" alt="{{ article.name }}">
     <p>{{ article.description }}</p>
 
    
+    
 
-    <div>
-        <h3>Commentaires :</h3>
-            <p>Aucun commentaire pour le moment.</p>
-    </div>
 </article>
-
    
