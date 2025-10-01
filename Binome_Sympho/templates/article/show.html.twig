@@ -7,21 +7,7 @@
             <p>{{ article.description }}</p>
 
          <h2>Commentaires</h2>
-            {% for commentaire in commentaires %}
-                <div class="commentaire">
-                    <strong>{{ commentaire.auteur }}</strong> le {{ commentaire.createdAt|date('d/m/Y H:i') }}<br>
-                    <p>{{ commentaire.contenu }}</p>
-                </div>
-            {% else %}
-                <p>Aucun commentaire pour le moment.</p>
-            {% endfor %}
-
-            <h3>Ajouter un commentaire</h3>
-            {{ form_start(form) }}
-                {{ form_row(form.auteur) }}
-                {{ form_row(form.contenu) }}
-                <button type="submit">Envoyer</button>
-            {{ form_end(form) }}
+            
 
         </article>
    

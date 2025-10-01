@@ -14,19 +14,20 @@ class Commentaire
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $auteur = null;
 
-    // ⚡ Relation ManyToOne vers Article
-    #[ORM\ManyToOne(targetEntity: Article::class, inversedBy: 'commentaires')]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Article $article = null;
 
-    // --- Getters et Setters ---
-
+    // --- Getters & Setters ---
     public function getId(): ?int
     {
         return $this->id;
@@ -37,7 +38,7 @@ class Commentaire
         return $this->content;
     }
 
-    public function setContent(string $content): static
+    public function setContent(?string $content): static
     {
         $this->content = $content;
         return $this;
@@ -54,6 +55,17 @@ class Commentaire
         return $this;
     }
 
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
     public function getArticle(): ?Article
     {
         return $this->article;
@@ -65,3 +77,4 @@ class Commentaire
         return $this;
     }
 }
+
