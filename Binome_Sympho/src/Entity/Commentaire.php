@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CommentaireRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,17 +17,17 @@ class Commentaire
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
-    /**
-     * @var Collection<int, Article>
-     */
-    #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'commentaire')]
-    private Collection $articles;
+    #[ORM\Column(length: 100)]
+    private ?string $auteur = null;
 
-    public function __construct()
-    {
-        $this->articles = new ArrayCollection();
-    }
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $createdAt = null;
 
+    #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Article $article = null;
+
+    // --- Getters & Setters ---
     public function getId(): ?int
     {
         return $this->id;
@@ -43,37 +41,40 @@ class Commentaire
     public function setContent(?string $content): static
     {
         $this->content = $content;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Article>
-     */
-    public function getArticles(): Collection
+    public function getAuteur(): ?string
     {
-        return $this->articles;
+        return $this->auteur;
     }
 
-    public function addArticle(Article $article): static
+    public function setAuteur(string $auteur): static
     {
-        if (!$this->articles->contains($article)) {
-            $this->articles->add($article);
-            $article->setCommentaire($this);
-        }
-
+        $this->auteur = $auteur;
         return $this;
     }
 
-    public function removeArticle(Article $article): static
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        if ($this->articles->removeElement($article)) {
-            // set the owning side to null (unless already changed)
-            if ($article->getCommentaire() === $this) {
-                $article->setCommentaire(null);
-            }
-        }
+        return $this->createdAt;
+    }
 
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    public function getArticle(): ?Article
+    {
+        return $this->article;
+    }
+
+    public function setArticle(?Article $article): static
+    {
+        $this->article = $article;
         return $this;
     }
 }
+

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
+use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,45 +15,16 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/article')]
 final class ArticleController extends AbstractController
 {
+        //ici j affiche toutes articles
     #[Route(name: 'app_article_index', methods: ['GET'])]
     public function index(ArticleRepository $articleRepository): Response
     {
+            $articles = $articleRepository->findAll();
         return $this->render('article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
+            'articles' => $articles
         ]);
     }
 
-    #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $article = new Article();
-        $form = $this->createForm(ArticleType::class, $article);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($article);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('article/new.html.twig', [
-            'article' => $article,
-            'form' => $form,
-        ]);
-    }
-
-
-        
-    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
-    public function show(Article $article, ArticleRepository $articleRepo, int $id): Response
-    {
-        $article = $articleRepo->findOneBy(['id' => $id]);
-        
-        return $this->render('article/show.html.twig', [
-            'article' => $article,
-        ]);
-    }
 
     #[Route('/{id}/edit', name: 'app_article_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Article $article, EntityManagerInterface $entityManager): Response
@@ -72,6 +44,39 @@ final class ArticleController extends AbstractController
         ]);
     }
 
+    //ici je cree un nouveau article
+
+    #[Route('/new', name: 'app_article_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $article = new Article();
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $file = $form->get('image')->getData();
+                if ($file){
+
+                    //ici je change le nom de l ilage
+                    $newFileName = time().'_'. $file -> getClientOriginalName();
+                    //ici je gere la location de l image
+                    $file->move($this->getParameter('article_dir'), $newFileName);
+                    $article->setImage($newFileName);
+                }
+                
+            $entityManager->persist($article);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('article/new.html.twig', [
+            'article' => $article,
+            'form' => $form,
+        ]);
+    }
+
     #[Route('/{id}', name: 'app_article_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article, EntityManagerInterface $entityManager): Response
     {
@@ -81,5 +86,18 @@ final class ArticleController extends AbstractController
         }
 
         return $this->redirectToRoute('app_article_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+            // ici j affiche un seul article
+    #[Route('/{id}', name: 'app_article_show', methods: ['GET'])]
+    public function show(Article $article, ArticleRepository $articleRepo,CommentaireRepository $commmentaireRepo, int $id): Response
+    {
+        $article = $articleRepo->findOneBy(['id' => $id]);
+        //selection de toutes commentaires
+        $commentaires = $commmentaireRepo->findBy(['article' => $article], ['createdAt' => 'DESC']);
+        return $this->render('article/show.html.twig', [
+            'article' => $article,
+            'commentaires' => $commentaires,
+        ]);
     }
 }
