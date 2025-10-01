@@ -9,6 +9,7 @@ use App\Entity\Races;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -18,7 +19,6 @@ class ArticleType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('image')
             ->add('pays', EntityType::class, [
                 'class' => Pays::class,
                 'choice_label' => 'name',
@@ -31,6 +31,8 @@ class ArticleType extends AbstractType
                 'label' => 'Votre commentaire',
                 'required' => true,
             ])
+            ->add('submit', SubmitType::class, [
+        'label' => 'Envoyer'])
         ;
     }
 
