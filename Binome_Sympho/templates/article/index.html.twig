@@ -1,0 +1,14 @@
+
+
+<a href="{{path('app_article_new')}}">Ajouter une article</a>
+{% for article in articles %}
+    <h2>{{article.name}}</h2><br>
+    <p>{{article.description}}</p><br>
+    <span>{{article.races.names}}</span><br>
+    <span>{{ article.races.espece }}</span><br>
+    <img src="{{ asset('assets/upload/article/' ~ article.image) }}" alt="{{ article.name }}">
+    <p>{{ article.description }}</p>
+    <a href="{{ path('app_article_show', {'id' : article.id})}}">voir</a><br>
+    <a href="{{ path('app_article_edit', {'id' : article.id})}}">modifier</a><br>
+    {% include "article/_delete_form.html.twig" %}
+{% endfor %}
